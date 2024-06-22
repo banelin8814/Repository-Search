@@ -1,5 +1,5 @@
 //
-//  ViewController.swift
+//  SecondVC.swift
 //  Repository Search
 //
 //  Created by 林佑淳 on 2024/6/20.
@@ -7,11 +7,11 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class SecondVC: UIViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        view.backgroundColor = .red
+
+        
     }
 }
-
