@@ -31,6 +31,9 @@ class FirstVC: UIViewController {
     func setNavigtion() {
         self.navigationItem.title = "Repository Search"
         self.navigationController?.navigationBar.prefersLargeTitles = true
+        
+        navigationItem.backBarButtonItem = UIBarButtonItem(title: "Back", style: .plain, target: nil, action: nil)
+        navigationItem.backBarButtonItem?.tintColor = .black
     }
     
     func setUpTableView() {
@@ -63,7 +66,13 @@ extension FirstVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "FirstVCTableViewCell", for: indexPath)
         cell.textLabel?.text = "123"
+        cell.selectionStyle = .none
         return cell
+    }
+    
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        let secondVC = DetailVC()
+        self.navigationController?.pushViewController(secondVC, animated: true)
     }
 }
 
