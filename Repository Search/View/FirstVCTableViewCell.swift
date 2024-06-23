@@ -30,7 +30,6 @@ class FirstVCTableViewCell: UITableViewCell {
         return stackView
     }()
     
-    
     private var repositoriesName: UILabel = {
         let label = UILabel()
         label.font = UIFont.systemFont(ofSize: 20, weight: .bold)

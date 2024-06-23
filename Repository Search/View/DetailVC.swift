@@ -75,7 +75,7 @@ class DetailVC: UIViewController {
         super.viewDidLoad()
         view.backgroundColor = .white
         setUpUI()
-        self.navigationItem.title = "Detail"
+        self.navigationItem.title = ""
     }
     
     func setUpUI() {
@@ -138,11 +138,15 @@ class DetailVC: UIViewController {
         if let url = URL(string: repository.owner.avatarUrl) {
             self.ownerIconImg.load(url: url)
         }
-        self.programLanguageLbl.text = repository.language
-        self.writtenInLbl.text = repository.description
-        self.starsLbl.text = "\(repository.stargazersCount) stars"
-        self.watcherLbl.text = "\(repository.watchersCount) watchers"
-        self.forkLbl.text = "\(repository.forksCount) forks"
-        self.issueLbl.text = "\(repository.openIssuesCount) open issues"
+        DispatchQueue.main.async {
+            self.navigationItem.title = repository.name
+            print(repository.name)
+            self.programLanguageLbl.text = repository.name
+            self.writtenInLbl.text = "written in \(repository.language ?? "")"
+            self.starsLbl.text = "\(repository.stargazersCount) stars"
+            self.watcherLbl.text = "\(repository.watchersCount) watchers"
+            self.forkLbl.text = "\(repository.forksCount) forks"
+            self.issueLbl.text = "\(repository.openIssuesCount) open issues"
+        }
     }
 }
