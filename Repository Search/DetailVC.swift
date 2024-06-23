@@ -29,6 +29,7 @@ class DetailVC: UIViewController {
         let label = UILabel()
         label.text = "writtenIn"
         label.font = UIFont.systemFont(ofSize: 18, weight: .bold)
+        label.numberOfLines = 0
         label.textColor = .black
         label.textAlignment = .left
         return label
@@ -131,6 +132,17 @@ class DetailVC: UIViewController {
             issueLbl.heightAnchor.constraint(equalToConstant: 20),
 
         ])
-        
+    }
+    
+    func configUIContent(_ repository: Repository) {
+        if let url = URL(string: repository.owner.avatarUrl) {
+            self.ownerIconImg.load(url: url)
+        }
+        self.programLanguageLbl.text = repository.language
+        self.writtenInLbl.text = repository.description
+        self.starsLbl.text = "\(repository.stargazersCount) stars"
+        self.watcherLbl.text = "\(repository.watchersCount) watchers"
+        self.forkLbl.text = "\(repository.forksCount) forks"
+        self.issueLbl.text = "\(repository.openIssuesCount) open issues"
     }
 }

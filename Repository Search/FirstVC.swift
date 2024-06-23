@@ -10,13 +10,15 @@ import UIKit
 class FirstVC: UIViewController {
    
     //MARK: - Properties
-    let searchController = UISearchController()
+    private let searchController = UISearchController()
 
     private var tableView: UITableView = {
         let tableView = UITableView()
         tableView.register(FirstVCTableViewCell.self, forCellReuseIdentifier: "FirstVCTableViewCell")
         return tableView
     }()
+    
+    private var repositories: [Repository] = []
     
     //MARK: - Life Cycle
     override func viewDidLoad() {
@@ -26,9 +28,10 @@ class FirstVC: UIViewController {
         setNavigtion()
         setUpTableView()
         setUpSearchBar()
+        searchRepositories(query: "Swift")
     }
     //MARK: - Function
-    func setNavigtion() {
+    private func setNavigtion() {
         self.navigationItem.title = "Repository Search"
         self.navigationController?.navigationBar.prefersLargeTitles = true
         
@@ -36,7 +39,7 @@ class FirstVC: UIViewController {
         navigationItem.backBarButtonItem?.tintColor = .black
     }
     
-    func setUpTableView() {
+    private func setUpTableView() {
         view.addSubview(tableView)
         tableView.translatesAutoresizingMaskIntoConstraints = false
         NSLayoutConstraint.activate([
@@ -47,7 +50,7 @@ class FirstVC: UIViewController {
         ])
     }
     
-    func setUpSearchBar() {
+    private func setUpSearchBar() {
         searchController.searchResultsUpdater = self
         searchController.delegate = self
         searchController.obscuresBackgroundDuringPresentation = false
@@ -56,23 +59,45 @@ class FirstVC: UIViewController {
         navigationItem.searchController = searchController
         definesPresentationContext = true
     }
+    
+    private func searchRepositories(query: String) {
+        NetworkManager.shared.searchRepositories(query: query, page: 1) { [weak self] result in
+            switch result {
+            case .success(let repositories):
+                self?.repositories = repositories
+                DispatchQueue.main.async {
+                    self?.tableView.reloadData()
+                }
+            case .failure(let error):
+                print("Error: \(error.localizedDescription)")
+            }
+        }
+        
+        
+    }
 }
 //MARK: - Extension
 extension FirstVC: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        10
+        repositories.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "FirstVCTableViewCell", for: indexPath)
-        cell.textLabel?.text = "123"
+        let cell = tableView.dequeueReusableCell(withIdentifier: "FirstVCTableViewCell", for: indexPath) as! FirstVCTableViewCell
         cell.selectionStyle = .none
+        cell.repository = self.repositories[indexPath.row]
+        cell.configureCell()
         return cell
     }
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let secondVC = DetailVC()
+        secondVC.configUIContent(repositories[indexPath.row])
         self.navigationController?.pushViewController(secondVC, animated: true)
+    }
+    
+    func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+        130
     }
 }
 
